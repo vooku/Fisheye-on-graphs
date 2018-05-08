@@ -22,8 +22,7 @@
   },
   "homepage": "https://github.com/vooku/Fisheye-on-graphs#readme",
   "dependencies": {
-    "graphml-parser": "^1.4.0",
-    "require": "^2.4.20",
+    "graphml-js": "^0.4.0",
     "vis": "^4.21.0"
   }
 }
