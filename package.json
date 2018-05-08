@@ -2,7 +2,7 @@
   "name": "fisheye-graphs",
   "version": "1.0.0",
   "description": "Fisheye deformation on graphs, a semestral work at FEE CTU Prague.",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/vooku/Fisheye-on-graphs#readme",
   "dependencies": {
     "graphml-parser": "^1.4.0",
+    "require": "^2.4.20",
     "vis": "^4.21.0"
   }
 }
