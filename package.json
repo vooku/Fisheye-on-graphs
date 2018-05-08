@@ -1,0 +1,28 @@
+{
+  "name": "fisheye-graphs",
+  "version": "1.0.0",
+  "description": "Fisheye deformation on graphs, a semestral work at FEE CTU Prague.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vooku/Fisheye-on-graphs.git"
+  },
+  "keywords": [
+    "graph",
+    "zoom",
+    "fisheye"
+  ],
+  "author": "Eva Kopecka, Vadim Petrov",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/vooku/Fisheye-on-graphs/issues"
+  },
+  "homepage": "https://github.com/vooku/Fisheye-on-graphs#readme",
+  "dependencies": {
+    "graphml-parser": "^1.4.0",
+    "vis": "^4.21.0"
+  }
+}
