@@ -1,5 +1,12 @@
-var nnodes = 200;
-var nedges = 1000;
+function mouseCallback(event) {
+    var delta = 5;
+    var dir = event.altKey ? -1 : 1;
+
+    if (typeof graph !== 'undefined') {
+        var y = graph.nodes.get(126).y + dir * delta;
+        graph.nodes.update({id: 126, y: y});
+    }
+}
 
 function parseNodes(data, options, canvasWidth, canvasHeight) {
     var nodes = new vis.DataSet(options);
