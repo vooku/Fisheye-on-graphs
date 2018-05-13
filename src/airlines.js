@@ -12406,7 +12406,7 @@ function parseNodes(data, options, canvasWidth, canvasHeight) {
                 x: x,
                 y: y
             },
-            label: node["_attributes"]["tooltip"].substring(0, 3),
+            title: node["_attributes"]["tooltip"].substring(0, 3),
             chosen: {
                 node: changeChosenNode
             }

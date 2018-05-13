@@ -50,6 +50,7 @@ var changeChosenEdge =
 var dataSrc = "regular";
 document.getElementById(dataSrc).checked = true;
 
+var graph;
 const canvasWidth = document.getElementById('visualization').getBoundingClientRect().width;
 const canvasHeight = document.getElementById('visualization').getBoundingClientRect().height;
 const container = document.getElementById('visualization');
@@ -87,7 +88,6 @@ const options = {
 };
 
 function createGraph(id) {
-    var graph;
     switch (id) {
         case "airlines":
             graph = createAirlines(canvasWidth, canvasHeight);
