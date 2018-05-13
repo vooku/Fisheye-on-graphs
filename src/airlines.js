@@ -12406,7 +12406,10 @@ function parseNodes(data, options, canvasWidth, canvasHeight) {
                 x: x,
                 y: y
             },
-            label: node["_attributes"]["tooltip"].substring(0,3)
+            label: node["_attributes"]["tooltip"].substring(0, 3),
+            chosen: {
+                node: changeChosenNode
+            }
         });
     }
 
@@ -12436,7 +12439,10 @@ function parseEdges(data, options) {
         edges.add({
             id: edge["_id"],
             from: edge["_source"],
-            to: edge["_target"]
+            to: edge["_target"],
+            chosen: {
+                edge: changeChosenEdge
+            }
         });
     }
 

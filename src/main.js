@@ -8,6 +8,21 @@ function mouseCallback(event) {
     }
 }
 
+var changeChosenNode =
+    function (values, id, selected, hovering) {
+        values.color = "#fffafa";
+        values.borderColor = "#8b0000";
+        values.size = 12;
+        values.borderWidth = 3;
+    }
+
+var changeChosenEdge =
+    function (values, id, selected, hovering) {
+        values.color = "#8b0000";
+        values.opacity = 1.0;
+        values.width = 3;
+    }
+
 var dataSrc = "airlines";
 document.getElementById(dataSrc).checked = true;
 
@@ -20,15 +35,29 @@ const options = {
     autoResize: true,
     clickToUse: true,
     nodes: {
-        shape: 'circle',
+        shape: 'dot',
         fixed: {
             x: true,
             y: true
         },
+        size: 6,
+        borderWidth: 2
 
     },
+    edges: {
+        color: {
+            opacity: 0.1
+
+        },
+        smooth: {
+            enabled: true,
+            type: "continuous",
+            roundness: 0.5
+        },
+        width: 1
+    },
     interaction: {
-        //multiselect: true
+        multiselect: true,
         dragNodes: false,
         zoomView: true,
         dragView: false
