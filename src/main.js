@@ -8,6 +8,30 @@ function mouseCallback(event) {
     }
 }
 
+function nodesToScreenCoords(nodes) {
+    // generate screen coords
+    var xMax = nodes.max("x").x;
+    var xMin = nodes.min("x").x;
+    var yMax = nodes.max("y").y;
+    var yMin = nodes.min("y").y;
+    var w = xMax - xMin;
+    var h = yMax - yMin;
+    var ratio = w / h;
+
+    if (w === 0 || h === 0) {
+        console.log("Invalid graph dimensions: " + w + " " + h);
+        return;
+    }
+
+        nodes.forEach(function(node) {
+        var x = (-xMin + node.x) / w * canvasWidth;
+        var y = (-yMin + node.y) / h * canvasWidth / ratio;
+
+        //nodes.update({id: node.id, x: x, y: y, origin: {x: x, y: y}});
+        nodes.update({id: node.id, x: x, y: y, origin: {x: x, y: y}, title: x.toString().substring(0, 3) + " " + y.toString().substring(0, 3)}); // debug only
+    });
+}
+
 var changeChosenNode =
     function (values, id, selected, hovering) {
         values.color = "#fffafa";
@@ -23,7 +47,7 @@ var changeChosenEdge =
         values.width = 3;
     }
 
-var dataSrc = "airlines";
+var dataSrc = "regular";
 document.getElementById(dataSrc).checked = true;
 
 const canvasWidth = document.getElementById('visualization').getBoundingClientRect().width;
@@ -69,10 +93,10 @@ function createGraph(id) {
             graph = createAirlines(canvasWidth, canvasHeight);
             break;
         case "regular":
-            graph = createRegular(canvasWidth, canvasHeight, 100);
+            graph = createRegular(canvasWidth, canvasHeight, 20);
             break;
         default:
-            console.log("Invalid id \"" + id + "\"");
+            console.log("Invalid id \"" + id + "\", graph not created.");
             return;
     }
     var network = new vis.Network(container, graph, options);
@@ -86,4 +110,4 @@ function switchData(id) {
     createGraph(id);
 }
 
-createGraph("airlines");
+createGraph(dataSrc);

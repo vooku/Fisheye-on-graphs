@@ -12413,22 +12413,7 @@ function parseNodes(data, options, canvasWidth, canvasHeight) {
         });
     }
 
-    // generate screen coords
-    var xMax = nodes.max("x").x;
-    var xMin = nodes.min("x").x;
-    var yMax = nodes.max("y").y;
-    var yMin = nodes.min("y").y;
-    var w = xMax - xMin;
-    var h = yMax - yMin;
-    var ratio = w / h;
-
-    nodes.forEach(function(node) {
-        var x = (-xMin + node.x) / w * canvasWidth;
-        var y = (-yMin + node.y) / h * canvasWidth / ratio;
-
-        nodes.update({id: node.id, x: x, y: y, origin: {x: x, y: y}});
-    });
-
+    nodesToScreenCoords(nodes);
     return nodes;
 }
 
@@ -12450,12 +12435,8 @@ function parseEdges(data, options) {
 }
 
 function createAirlines(width, height) {
-    var options = {};
-    var nodes = parseNodes(data, options, width, height);
-    var edges = parseEdges(data, options);
-
     return {
-      nodes: nodes,
-      edges: edges
+        nodes: parseNodes(data, options, width, height),
+        edges: parseEdges(data, options)
     };
 }
