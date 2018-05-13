@@ -32,7 +32,7 @@ const container = document.getElementById('visualization');
 const options = {
     width: canvasWidth + 'px',
     height: canvasHeight + 'px',
-    autoResize: true,
+    autoResize: false,
     clickToUse: true,
     nodes: {
         shape: 'dot',
@@ -41,13 +41,11 @@ const options = {
             y: true
         },
         size: 6,
-        borderWidth: 2
-
+        borderWidth: 1
     },
     edges: {
         color: {
             opacity: 0.1
-
         },
         smooth: {
             enabled: true,
