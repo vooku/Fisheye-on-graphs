@@ -1,3 +1,3 @@
-function regularGraph(n) {
+function createRegular(width, height, n) {
 
 }
