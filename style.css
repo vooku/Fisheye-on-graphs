@@ -7,4 +7,11 @@
 #options {
     font-family: monospace;
     background-color: #d6e7ff;
+    padding: 0.5EM;
+    vertical-align: bottom;
+    display: inline-block;
+}
+
+.optionname {
+    font-weight: bold;
 }

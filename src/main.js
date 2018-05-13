@@ -30,30 +30,12 @@ function fisheye(focus, d) {
     // }
 }
 
-d = 0;
-document.onkeydown = keyCallback;
-function keyCallback(event) {
-    var delta = 1;
-    var dir;
-    switch (event.key) {
-        case "ArrowUp":
-            dir = 1;
-            break;
-        case "ArrowDown":
-            dir = -1;
-            break;
-        default:
-            console.log("Unknown key pressed!");
-            return;
-    }
-
+function sliderCallback(value) {
     var focus = {
         x: 430,//0.5 * canvasWidth,
         y: 123//0.5 * canvasHeight
     }
-
-    d += dir * delta;
-    fisheye(focus, d);
+    fisheye(focus, Number(value));
 }
 
 function nodesToScreenCoords(nodes) {
@@ -154,6 +136,7 @@ function switchData(id) {
     if (dataSrc === id)
         return;
 
+    document.getElementById("distortion").value = 0;
     dataSrc = id;
     createGraph(id);
 }

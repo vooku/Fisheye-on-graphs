@@ -8,9 +8,16 @@
     <script type="text/javascript" src="src/airlines.js"></script>
 </head>
 <body>
-    <div id="options">Display:
-        <input type="radio" name="dataSrc" id="airlines" onclick="switchData(this.id)" /> Airlines
-        <input type="radio" name="dataSrc" id="regular" onclick="switchData(this.id)" /> Regular Graph
+    <div id="options">
+        <div>
+            <span class="optionname">Display:</span>
+            <input type="radio" name="dataSrc" id="airlines" onclick="switchData(this.id)" /> Airlines
+            <input type="radio" name="dataSrc" id="regular" onclick="switchData(this.id)" /> Regular Graph
+        </div>
+        <div>
+            <span class="optionname">Distortion level:</span>
+            <input type="range" id="distortion" defaultValue=0 min=0 max=8 onchange="sliderCallback(this.value)">
+        </div>
     </div>
     <div id="visualization"></div>
     <div id="debug"></div>
