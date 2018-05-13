@@ -1,11 +1,59 @@
-function mouseCallback(event) {
-    var delta = 5;
-    var dir = event.altKey ? -1 : 1;
-
-    if (typeof graph !== 'undefined') {
-        var y = graph.nodes.get(126).y + dir * delta;
-        graph.nodes.update({id: 126, y: y});
+function fisheye(focus, d) {
+    if (typeof graph === 'undefined') {
+        console.log("Error: Trying to deform an undefined graph");
+        return;
     }
+    if (d < 0) {
+        console.log("Error: Distortion factor below zero.");
+        return;
+    }
+
+    function G(x) {
+        return ((d + 1) * x) / (d * x + 1);
+    }
+
+
+    function coord(P_i, F_i, limit) {
+        var dMax_i = (P_i > F_i ? limit - F_i : -F_i) / limit;
+        var d = (P_i - F_i) / limit;
+        return G(d / dMax_i) * dMax_i * limit + F_i;
+    }
+
+    graph.nodes.forEach(function(node) {
+    // for (var id = 0; id < graph.nodes.length; id++) {
+    //     var node = graph.nodes.get(id);
+        var x = coord(node.origin.x, focus.x, canvasWidth);
+        var y = coord(node.origin.y, focus.y, canvasHeight);
+
+        graph.nodes.update({id: node.id, x: x, y: y});
+    });
+    // }
+}
+
+d = 0;
+document.onkeydown = keyCallback;
+function keyCallback(event) {
+    var delta = 1;
+    var dir;
+    switch (event.key) {
+        case "ArrowUp":
+            dir = 1;
+            break;
+        case "ArrowDown":
+            dir = -1;
+            break;
+        default:
+            console.log("Unknown key pressed!");
+            return;
+    }
+
+    var focus = {
+        x: 430,//0.5 * canvasWidth,
+        y: 123//0.5 * canvasHeight
+    }
+
+    d += dir * delta;
+    fisheye(focus, d);
 }
 
 function nodesToScreenCoords(nodes) {
@@ -93,7 +141,7 @@ function createGraph(id) {
             graph = createAirlines(canvasWidth, canvasHeight);
             break;
         case "regular":
-            graph = createRegular(canvasWidth, canvasHeight, 20);
+            graph = createRegular(canvasWidth, canvasHeight, 10);
             break;
         default:
             console.log("Invalid id \"" + id + "\", graph not created.");
