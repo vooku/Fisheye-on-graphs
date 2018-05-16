@@ -67,10 +67,10 @@ function genEdges(options, n) {
             var pos = y * n + x;
             var p = primes[pos];
 
-            if (pos > n)          edges.add(genEdge(p            , pos, pos - n));
+            //if (pos > n)          edges.add(genEdge(p            , pos, pos - n));
             if (pos % n != n - 1) edges.add(genEdge(p * p        , pos, pos + 1));
             if (pos < n * n - n)  edges.add(genEdge(p * p * p    , pos, pos + n));
-            if (pos % n != 0)     edges.add(genEdge(p * p * p * p, pos, pos - 1));
+            //if (pos % n != 0)     edges.add(genEdge(p * p * p * p, pos, pos - 1));
         }
     }
 

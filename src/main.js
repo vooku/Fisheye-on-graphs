@@ -57,11 +57,6 @@ function rayRectIntersect(pos, dir, rect) {
     return { x: NaN, y: NaN};
 }
 
-// var pos = { x: 10, y: 5 };
-// var dir = { x: 10, y: 0 };
-// var rect = { l: 0, t: 0, r: 10, b: 10, w: 10, h: 10 };
-// console.log(rayRectIntersect(pos, dir, rect));
-
 function fisheye() {
     if (typeof graph === 'undefined') {
         console.log("Error: Trying to deform an undefined graph");
@@ -134,6 +129,14 @@ function fisheye() {
 
 function methodSwitch(id) {
     method = id;
+    fisheye();
+}
+
+function setFocus() {
+    focus = {
+        x: Number(document.getElementById("focusx").value),
+        y: Number(document.getElementById("focusy").value)
+    };
     fisheye();
 }
 
@@ -230,11 +233,13 @@ const canvasWidth = document.getElementById('visualization').getBoundingClientRe
 const canvasHeight = document.getElementById('visualization').getBoundingClientRect().height;
 var graphBounds = {
     l: 0, t: 0, r: 0, b: 0, w: 0, h: 0
-}
+};
 var focus = {
     x: 0.5 * canvasWidth,
     y: 0.5 * canvasHeight
-}
+};
+document.getElementById("focusx").value = focus.x;
+document.getElementById("focusy").value = focus.y;
 const container = document.getElementById('visualization');
 const options = {
     width: canvasWidth + 'px',

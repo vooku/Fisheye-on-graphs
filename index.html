@@ -24,10 +24,17 @@
             <span class="optionname">Distortion level:</span>
             <input type="range" id="distortion" defaultValue=0 value=0 min=0 max=8 onchange="fisheye()">
         </div>
+        <!-- Debug options -->
         <br/>
         <div class="opt">
             <span class="optionname">Debug mode</span>
             <input type="checkbox" id="debug" onchange="nodesToScreenCoords(graph.nodes)">
+        </div>
+        <div class="opt">
+            <span class="optionname">Focus point:</span>
+            x: <input type="text" class="textpoint" size=3 id="focusx"/>
+            y: <input type="text" class="textpoint" size=3 id="focusy"/>
+            <input type="button" value="Set" onclick="setFocus()" />
         </div>
     </div>
     <div id="visualization"></div>
