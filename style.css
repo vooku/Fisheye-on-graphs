@@ -1,12 +1,12 @@
 #visualization {
     width: 100%;
-    height: 700px;
+    height: 650px;
     border: 1px solid lightgray;
 }
 
 #options {
     font-family: monospace;
-    background-color: #d6e7ff;
+    background-color: #ddebff;
     padding: 0.5EM;
     vertical-align: bottom;
 }

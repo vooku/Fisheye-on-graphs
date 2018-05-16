@@ -1,37 +1,155 @@
-function fisheye(focus, d) {
+/**
+ * Intersect ray and rectangle
+ * @param  pos  Starting position of ray
+ * @param  dir  Direction of ray
+ * @param  rect Rectangle to intersect
+ * @return      First intersection
+ */
+function rayRectIntersect(pos, dir, rect) {
+    if (pos.x < rect.l || pos.x > rect.r || pos.y < rect.t || pos.y > rect.b) {
+        console.log("Point outside rectangle; feature not implemented.");
+        return { x: 0, y: 0};
+    }
+
+    if (dir.x == 0 && dir.y == 0) {
+        console.log("Invalid ray direction.");
+        return { x: NaN, y: NaN};
+    }
+
+    if (pos.x == rect.l || pos.x == rect.r || pos.y == rect.t || pos.y == rect.b)
+        return pos;
+
+    var t, y;
+    if (dir.x != 0) {
+        // left
+        t = (rect.l - pos.x) / dir.x;
+        if (t > 0) {
+            y = pos.y + t * dir.y;
+            if (y >= rect.t && y <= rect.b)
+                return { x: rect.l, y: y };
+        }
+        // right
+        t = (rect.r - pos.x) / dir.x;
+        if (t > 0) {
+            y = pos.y + t * dir.y;
+            if (y >= rect.t && y <= rect.b)
+                return { x: rect.r, y: y };
+        }
+    }
+    if (dir.y != 0) {
+        // top
+        t = (rect.t - pos.y) / dir.y;
+        if (t > 0) {
+            x = pos.x + t * dir.x;
+            if (x >= rect.l && x <= rect.r)
+                return { x: x, y: rect.t };
+        }
+        // bottom
+        t = (rect.b - pos.y) / dir.y;
+        if (t > 0) {
+            x = pos.x + t * dir.x;
+            if (x >= rect.l && x <= rect.r)
+                return { x: x, y: rect.b };
+        }
+    }
+
+    console.log("Cannot intersect ray with rectangle for unknown reason.");
+    return { x: NaN, y: NaN};
+}
+
+var pos = { x: 10, y: 5 };
+var dir = { x: 10, y: 0 };
+var rect = { l: 0, t: 0, r: 10, b: 10, w: 10, h: 10 };
+console.log(rayRectIntersect(pos, dir, rect));
+
+function fisheye() {
     if (typeof graph === 'undefined') {
         console.log("Error: Trying to deform an undefined graph");
         return;
     }
-    if (d < 0) {
+
+    var dFactor = Number(document.getElementById("distortion").value);
+    if (dFactor < 0) {
         console.log("Error: Distortion factor below zero.");
         return;
     }
 
     function G(x) {
-        return ((d + 1) * x) / (d * x + 1);
+        return ((dFactor + 1) * x) / (dFactor * x + 1);
     }
 
-    function coord(P_i, F_i, limit) {
-        var dMax_i = (P_i > F_i ? limit - F_i : -F_i) / limit;
-        var d = (P_i - F_i) / limit;
-        return G(d / dMax_i) * dMax_i * limit + F_i;
+    var distort;
+    switch (method) {
+        case "cartesian":
+            distort = function(P, F) {
+                function coord(P_i, F_i, limit) {
+                    var dMax_i = (P_i > F_i ? limit - F_i : -F_i) / limit;
+                    var dist_i = (P_i - F_i) / limit;
+                    return G(dist_i / dMax_i) * dMax_i * limit + F_i;
+                }
+
+                return {
+                    x: coord(P.x, F.x, graphBounds.w),
+                    y: coord(P.y, F.y, graphBounds.h)
+                };
+            };
+            break;
+        case "polar":
+            distort = function(P, F) {
+                var a = {
+                    x: P.x - F.x,
+                    y: P.y - F.y
+                }
+                var r = Math.sqrt(a.x * a.x + a.y * a.y);
+                var phi = Math.atan2(a.y, a.x);
+
+                var rho = intersect(F, a, graphBounds);
+
+
+                return {
+                    x: 0,
+                    y: 0
+                }
+            };
+            break;
+        case "graph":
+            distort = function(P, F) {
+                return {
+                    x: 0,
+                    y: 0
+                }
+            };
+            break;
+        default:
+        console.log("Invalid method \"" + method + "\".");
+        return;
     }
 
     graph.nodes.forEach(function(node) {
-        var x = coord(node.origin.x, focus.x, graphWidth);
-        var y = coord(node.origin.y, focus.y, graphHeight);
-
-        graph.nodes.update({id: node.id, x: x, y: y});
+        var pos = distort(node.origin, focus);
+        graph.nodes.update({id: node.id, x: pos.x, y: pos.y});
     });
 }
 
-function sliderCallback(value) {
-    var focus = {
-        x: 525,//0.5 * canvasWidth,
-        y: 175//0.5 * canvasHeight
-    }
-    fisheye(focus, Number(value));
+function methodSwitch(id) {
+    method = id;
+    fisheye();
+}
+
+function getBounds(nodes) {
+    var xMax = nodes.max("x").x;
+    var xMin = nodes.min("x").x;
+    var yMax = nodes.max("y").y;
+    var yMin = nodes.min("y").y;
+
+    return {
+        l: xMin,
+        t: yMin,
+        r: xMax,
+        b: yMin,
+        w: xMax - xMin,
+        h: yMax - yMin
+    };
 }
 
 function nodesToScreenCoords(nodes) {
@@ -58,8 +176,32 @@ function nodesToScreenCoords(nodes) {
             nodes.update({id: node.id, x: x, y: y, origin: {x: x, y: y, title: node.origin.title}, title: node.origin.title});
     });
 
-    graphWidth = nodes.max("x").x - nodes.min("x").x;
-    graphHeight = nodes.max("y").y - nodes.min("y").y;
+    graphBounds = getBounds(nodes);
+}
+
+function createGraph(id) {
+    switch (id) {
+        case "airlines":
+            graph = createAirlines(canvasWidth, canvasHeight);
+            break;
+        case "regular":
+            graph = createRegular(canvasWidth, canvasHeight, 10);
+            break;
+        default:
+            console.log("Invalid id \"" + id + "\", graph not created.");
+            return;
+    }
+    nodesToScreenCoords(graph.nodes);
+    var network = new vis.Network(container, graph, options);
+}
+
+function switchData(id) {
+    if (dataSrc === id)
+        return;
+
+    document.getElementById("distortion").value = 0;
+    dataSrc = id;
+    createGraph(id);
 }
 
 var changeChosenNode =
@@ -79,12 +221,21 @@ var changeChosenEdge =
 
 var dataSrc = "regular";
 document.getElementById(dataSrc).checked = true;
+var method = "cartesian"
+document.getElementById(method).checked = true;
+document.getElementById("distortion").value = 0;
+
+var focus = {
+    x: 587,//0.5 * canvasWidth,
+    y: 469//0.5 * canvasHeight
+}
 
 var graph;
 const canvasWidth = document.getElementById('visualization').getBoundingClientRect().width;
 const canvasHeight = document.getElementById('visualization').getBoundingClientRect().height;
-var graphWidth;
-var graphHeight;
+var graphBounds = {
+    l: 0, t: 0, r: 0, b: 0, w: 0, h: 0
+}
 const container = document.getElementById('visualization');
 const options = {
     width: canvasWidth + 'px',
@@ -118,30 +269,5 @@ const options = {
         dragView: false
     }
 };
-
-function createGraph(id) {
-    switch (id) {
-        case "airlines":
-            graph = createAirlines(canvasWidth, canvasHeight);
-            break;
-        case "regular":
-            graph = createRegular(canvasWidth, canvasHeight, 10);
-            break;
-        default:
-            console.log("Invalid id \"" + id + "\", graph not created.");
-            return;
-    }
-    nodesToScreenCoords(graph.nodes);
-    var network = new vis.Network(container, graph, options);
-}
-
-function switchData(id) {
-    if (dataSrc === id)
-        return;
-
-    document.getElementById("distortion").value = 0;
-    dataSrc = id;
-    createGraph(id);
-}
 
 createGraph(dataSrc);

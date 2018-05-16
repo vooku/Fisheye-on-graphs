@@ -16,13 +16,13 @@
         </div>
         <div class="opt">
             <span class="optionname">Fisheye method:</span>
-            <input type="radio" name="method" id="airlines" onclick="" /> Cartesian
-            <input type="radio" name="method" id="regular" onclick="" /> Polar
-            <input type="radio" name="method" id="regular" onclick="" /> Graph distance
+            <input type="radio" name="method" id="cartesian" onclick="methodSwitch(this.id)" /> Cartesian
+            <input type="radio" name="method" id="polar" onclick="methodSwitch(this.id)" /> Polar
+            <input type="radio" name="method" id="graph" onclick="methodSwitch(this.id)" /> Graph distance
         </div>
         <div class="opt">
             <span class="optionname">Distortion level:</span>
-            <input type="range" id="distortion" defaultValue=0 value=0 min=0 max=8 onchange="sliderCallback(this.value)">
+            <input type="range" id="distortion" defaultValue=0 value=0 min=0 max=8 onchange="fisheye()">
         </div>
         <br/>
         <div class="opt">
