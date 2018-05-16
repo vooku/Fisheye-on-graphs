@@ -9,9 +9,13 @@
     background-color: #d6e7ff;
     padding: 0.5EM;
     vertical-align: bottom;
-    display: inline-block;
 }
 
 .optionname {
     font-weight: bold;
+}
+
+.opt {
+    display: inline-block;
+    margin-right: 2em;
 }

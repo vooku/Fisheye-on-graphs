@@ -19,8 +19,8 @@ function fisheye(focus, d) {
     }
 
     graph.nodes.forEach(function(node) {
-        var x = coord(node.origin.x, focus.x, canvasWidth);
-        var y = coord(node.origin.y, focus.y, canvasHeight);
+        var x = coord(node.origin.x, focus.x, graphWidth);
+        var y = coord(node.origin.y, focus.y, graphHeight);
 
         graph.nodes.update({id: node.id, x: x, y: y});
     });
@@ -56,8 +56,10 @@ function nodesToScreenCoords(nodes) {
             nodes.update({id: node.id, x: x, y: y, origin: {x: x, y: y, title: node.origin.title}, title: x.toString().substring(0, 3) + " " + y.toString().substring(0, 3)});
         else
             nodes.update({id: node.id, x: x, y: y, origin: {x: x, y: y, title: node.origin.title}, title: node.origin.title});
-
     });
+
+    graphWidth = nodes.max("x").x - nodes.min("x").x;
+    graphHeight = nodes.max("y").y - nodes.min("y").y;
 }
 
 var changeChosenNode =
