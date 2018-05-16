@@ -12397,6 +12397,7 @@ function parseNodes(data, options, canvasWidth, canvasHeight) {
     for (const node of data["nodes"]) {
         var x = node["_attributes"]["x"];
         var y = node["_attributes"]["y"];
+        var title = node["_attributes"]["tooltip"].substring(0, 3);
 
         nodes.add({
             id: node["_id"],
@@ -12404,16 +12405,16 @@ function parseNodes(data, options, canvasWidth, canvasHeight) {
             y: y,
             origin: {
                 x: x,
-                y: y
+                y: y,
+                title: title
             },
-            title: node["_attributes"]["tooltip"].substring(0, 3),
+            title: title,
             chosen: {
                 node: changeChosenNode
             }
         });
     }
 
-    nodesToScreenCoords(nodes);
     return nodes;
 }
 

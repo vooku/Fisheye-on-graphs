@@ -35,7 +35,8 @@ function genNodes(options, width, height, n) {
                 y: y,
                 origin: {
                     x: x,
-                    y: y
+                    y: y,
+                    title: pos
                 },
                 chosen: {
                     node: changeChosenNode
@@ -44,7 +45,6 @@ function genNodes(options, width, height, n) {
         }
     }
 
-    nodesToScreenCoords(nodes);
     return nodes;
 }
 

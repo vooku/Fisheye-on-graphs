@@ -16,7 +16,11 @@
         </div>
         <div>
             <span class="optionname">Distortion level:</span>
-            <input type="range" id="distortion" defaultValue=0 min=0 max=8 onchange="sliderCallback(this.value)">
+            <input type="range" id="distortion" defaultValue=0 value=0 min=0 max=8 onchange="sliderCallback(this.value)">
+        </div>
+        <div>
+            <span class="optionname">Debug mode</span>
+            <input type="checkbox" id="debug" onchange="nodesToScreenCoords(graph.nodes)">
         </div>
     </div>
     <div id="visualization"></div>

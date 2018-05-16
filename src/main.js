@@ -12,7 +12,6 @@ function fisheye(focus, d) {
         return ((d + 1) * x) / (d * x + 1);
     }
 
-
     function coord(P_i, F_i, limit) {
         var dMax_i = (P_i > F_i ? limit - F_i : -F_i) / limit;
         var d = (P_i - F_i) / limit;
@@ -20,26 +19,22 @@ function fisheye(focus, d) {
     }
 
     graph.nodes.forEach(function(node) {
-    // for (var id = 0; id < graph.nodes.length; id++) {
-    //     var node = graph.nodes.get(id);
         var x = coord(node.origin.x, focus.x, canvasWidth);
         var y = coord(node.origin.y, focus.y, canvasHeight);
 
         graph.nodes.update({id: node.id, x: x, y: y});
     });
-    // }
 }
 
 function sliderCallback(value) {
     var focus = {
-        x: 430,//0.5 * canvasWidth,
-        y: 123//0.5 * canvasHeight
+        x: 525,//0.5 * canvasWidth,
+        y: 175//0.5 * canvasHeight
     }
     fisheye(focus, Number(value));
 }
 
 function nodesToScreenCoords(nodes) {
-    // generate screen coords
     var xMax = nodes.max("x").x;
     var xMin = nodes.min("x").x;
     var yMax = nodes.max("y").y;
@@ -53,12 +48,15 @@ function nodesToScreenCoords(nodes) {
         return;
     }
 
-        nodes.forEach(function(node) {
+    nodes.forEach(function(node) {
         var x = (-xMin + node.x) / w * canvasWidth;
         var y = (-yMin + node.y) / h * canvasWidth / ratio;
 
-        //nodes.update({id: node.id, x: x, y: y, origin: {x: x, y: y}});
-        nodes.update({id: node.id, x: x, y: y, origin: {x: x, y: y}, title: x.toString().substring(0, 3) + " " + y.toString().substring(0, 3)}); // debug only
+        if (document.getElementById("debug").checked)
+            nodes.update({id: node.id, x: x, y: y, origin: {x: x, y: y, title: node.origin.title}, title: x.toString().substring(0, 3) + " " + y.toString().substring(0, 3)});
+        else
+            nodes.update({id: node.id, x: x, y: y, origin: {x: x, y: y, title: node.origin.title}, title: node.origin.title});
+
     });
 }
 
@@ -83,6 +81,8 @@ document.getElementById(dataSrc).checked = true;
 var graph;
 const canvasWidth = document.getElementById('visualization').getBoundingClientRect().width;
 const canvasHeight = document.getElementById('visualization').getBoundingClientRect().height;
+var graphWidth;
+var graphHeight;
 const container = document.getElementById('visualization');
 const options = {
     width: canvasWidth + 'px',
@@ -129,6 +129,7 @@ function createGraph(id) {
             console.log("Invalid id \"" + id + "\", graph not created.");
             return;
     }
+    nodesToScreenCoords(graph.nodes);
     var network = new vis.Network(container, graph, options);
 }
 
