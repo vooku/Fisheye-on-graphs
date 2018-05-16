@@ -57,10 +57,10 @@ function rayRectIntersect(pos, dir, rect) {
     return { x: NaN, y: NaN};
 }
 
-var pos = { x: 10, y: 5 };
-var dir = { x: 10, y: 0 };
-var rect = { l: 0, t: 0, r: 10, b: 10, w: 10, h: 10 };
-console.log(rayRectIntersect(pos, dir, rect));
+// var pos = { x: 10, y: 5 };
+// var dir = { x: 10, y: 0 };
+// var rect = { l: 0, t: 0, r: 10, b: 10, w: 10, h: 10 };
+// console.log(rayRectIntersect(pos, dir, rect));
 
 function fisheye() {
     if (typeof graph === 'undefined') {
@@ -103,12 +103,13 @@ function fisheye() {
                 var r = Math.sqrt(a.x * a.x + a.y * a.y);
                 var phi = Math.atan2(a.y, a.x);
 
-                var rho = intersect(F, a, graphBounds);
-
-
+                // TODO points on side of square
+                var rho = rayRectIntersect(F, a, graphBounds);
+                var rMax = Math.sqrt((rho.x - F.x)*(rho.x - F.x) + (rho.y - F.y)*(rho.y - F.y))
+                var rn = rMax * ((dFactor + 1) * r / rMax) / (dFactor * r / rMax + 1);
                 return {
-                    x: 0,
-                    y: 0
+                    x: F.x + rn * Math.cos(phi),
+                    y: F.y + rn * Math.sin(phi)
                 }
             };
             break;
@@ -146,7 +147,7 @@ function getBounds(nodes) {
         l: xMin,
         t: yMin,
         r: xMax,
-        b: yMin,
+        b: yMax,
         w: xMax - xMin,
         h: yMax - yMin
     };
@@ -224,17 +225,15 @@ document.getElementById(dataSrc).checked = true;
 var method = "cartesian"
 document.getElementById(method).checked = true;
 document.getElementById("distortion").value = 0;
-
-var focus = {
-    x: 587,//0.5 * canvasWidth,
-    y: 469//0.5 * canvasHeight
-}
-
 var graph;
 const canvasWidth = document.getElementById('visualization').getBoundingClientRect().width;
 const canvasHeight = document.getElementById('visualization').getBoundingClientRect().height;
 var graphBounds = {
     l: 0, t: 0, r: 0, b: 0, w: 0, h: 0
+}
+var focus = {
+    x: 0.5 * canvasWidth,
+    y: 0.5 * canvasHeight
 }
 const container = document.getElementById('visualization');
 const options = {
