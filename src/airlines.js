@@ -12390,3 +12390,54 @@ var data =
     }
   ]
 }
+
+function parseNodes(data, options, canvasWidth, canvasHeight) {
+    var nodes = new vis.DataSet(options);
+
+    for (const node of data["nodes"]) {
+        var x = node["_attributes"]["x"];
+        var y = node["_attributes"]["y"];
+        var title = node["_attributes"]["tooltip"].substring(0, 3);
+
+        nodes.add({
+            id: node["_id"],
+            x: x,
+            y: y,
+            origin: {
+                x: x,
+                y: y,
+                title: title
+            },
+            title: title,
+            chosen: {
+                node: changeChosenNode
+            }
+        });
+    }
+
+    return nodes;
+}
+
+function parseEdges(data, options) {
+    var edges = new vis.DataSet(options);
+
+    for (const edge of data["edges"]) {
+        edges.add({
+            id: edge["_id"],
+            from: edge["_source"],
+            to: edge["_target"],
+            chosen: {
+                edge: changeChosenEdge
+            }
+        });
+    }
+
+    return edges;
+}
+
+function createAirlines(width, height) {
+    return {
+        nodes: parseNodes(data, options, width, height),
+        edges: parseEdges(data, options)
+    };
+}
