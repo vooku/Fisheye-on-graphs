@@ -211,10 +211,9 @@ function createGraph(id) {
                if (a !== undefined) {
                    graph.nodes.update({ id: i, group: undefined, color: { background: '#D2E5FF', border: '#2B7CE9' }, borderWidth: 1 });
                }
-
             }
         }
-        
+
         for (let i = 0; i < selectedEdges.length; i++) {
             let a = graph.edges.get(selectedEdges[i]);
             //console.log(a.id, "|", a.from, "|", a.to);
@@ -222,13 +221,16 @@ function createGraph(id) {
             let pom = graph.nodes.get(a.from).group;
             if (pom == undefined) graph.nodes.update({ id: a.from, group: 'nodeSelectedGTo' });
         }
+
+        focus = { x: 0, y: 0 };
         for (let i = 0; i < selectedNodes.length; i++) {
-            focus.x = graph.nodes.get(selectedNodes[i]).x;
-            focus.y = graph.nodes.get(selectedNodes[i]).y;
+            focus.x += graph.nodes.get(selectedNodes[i]).origin.x;
+            focus.y += graph.nodes.get(selectedNodes[i]).origin.y;
             console.log(focus.x, " xx ", focus.y, "|");
-            fisheye();
         }
-        
+        focus.x /= selectedNodes.length;
+        focus.y /= selectedNodes.length;
+        fisheye()
     });
 }
 
@@ -359,5 +361,3 @@ const options = {
 };
 
 createGraph(dataSrc);
-
-
