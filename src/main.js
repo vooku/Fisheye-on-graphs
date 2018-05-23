@@ -214,6 +214,7 @@ function createGraph(id) {
             }
         }
 
+        var newfocus = { x: 0, y: 0 };
         for (let i = 0; i < selectedEdges.length; i++) {
             let a = graph.edges.get(selectedEdges[i]);
             //console.log(a.id, "|", a.from, "|", a.to);
@@ -222,15 +223,17 @@ function createGraph(id) {
             if (pom == undefined) graph.nodes.update({ id: a.from, group: 'nodeSelectedGTo' });
         }
 
-        focus = { x: 0, y: 0 };
         for (let i = 0; i < selectedNodes.length; i++) {
-            focus.x += graph.nodes.get(selectedNodes[i]).origin.x;
-            focus.y += graph.nodes.get(selectedNodes[i]).origin.y;
-            console.log(focus.x, " xx ", focus.y, "|");
+            newfocus.x += graph.nodes.get(selectedNodes[i]).origin.x;
+            newfocus.y += graph.nodes.get(selectedNodes[i]).origin.y;
         }
-        focus.x /= selectedNodes.length;
-        focus.y /= selectedNodes.length;
-        fisheye()
+
+        if (newfocus.x !== 0 && newfocus.y !== 0) {
+            newfocus.x /= selectedNodes.length;
+            newfocus.y /= selectedNodes.length;
+            focus = newfocus;
+            fisheye()
+        }
     });
 }
 
