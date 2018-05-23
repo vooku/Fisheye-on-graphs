@@ -12411,8 +12411,9 @@ function parseNodes(data, options, canvasWidth, canvasHeight) {
             title: title,
             chosen: {
                 node: changeChosenNode
-            }
+            },
         });
+
     }
 
     return nodes;
@@ -12428,7 +12429,7 @@ function parseEdges(data, options) {
             to: edge["_target"],
             chosen: {
                 edge: changeChosenEdge
-            }
+            },
         });
     }
 
