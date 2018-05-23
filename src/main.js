@@ -137,6 +137,8 @@ function setFocus() {
         x: Number(document.getElementById("focusx").value),
         y: Number(document.getElementById("focusy").value)
     };
+
+    console.log(focus.x, " .. ", focus.y, "|")
     fisheye();
 }
 
@@ -197,6 +199,37 @@ function createGraph(id) {
     }
     nodesToScreenCoords(graph.nodes);
     network = new vis.Network(container, graph, options);
+
+    network.on('select', function (params) {
+        console.log(params);
+        var selectedEdges = params.edges;
+        var selectedNodes = params.nodes;
+        // console.log(selectedEdges, "|", selectedNodes);
+        if (params.edges.length <= 0) {
+            for (let i = 0; i < graph.nodes.length; i++) {
+               let a = graph.nodes.get(i).group;
+               if (a !== undefined) {
+                   graph.nodes.update({ id: i, group: undefined, color: { background: '#D2E5FF', border: '#2B7CE9' }, borderWidth: 1 });
+               }
+
+            }
+        }
+        
+        for (let i = 0; i < selectedEdges.length; i++) {
+            let a = graph.edges.get(selectedEdges[i]);
+            //console.log(a.id, "|", a.from, "|", a.to);
+            graph.nodes.update({ id: a.to, group: 'nodeSelectedGFrom' });
+            let pom = graph.nodes.get(a.from).group;
+            if (pom == undefined) graph.nodes.update({ id: a.from, group: 'nodeSelectedGTo' });
+        }
+        for (let i = 0; i < selectedNodes.length; i++) {
+            focus.x = graph.nodes.get(selectedNodes[i]).x;
+            focus.y = graph.nodes.get(selectedNodes[i]).y;
+            console.log(focus.x, " xx ", focus.y, "|");
+            fisheye();
+        }
+        
+    });
 }
 
 function switchData(id) {
@@ -240,7 +273,6 @@ var changeChosenEdge =
         values.color = "#8b0000";
         values.opacity = 1.0;
         values.width = 1.5;
-        //graph.nodes.update({ id: graph.edges.get(id).from, color: 'red' });
     }
 
 var dataSrc = "regular";
@@ -296,9 +328,7 @@ const options = {
         size: 6,
         borderWidth: 1,
         color: {
-            //inherit: false,
-            //background: "#eeeeee",
-           // border: "8b0000"
+            background: '#D2E5FF'
         }
     },
     groups: {
@@ -318,20 +348,6 @@ const options = {
                 background: "#eeeeee"
             }
         },
-        nodeSelectedGBoth: {
-            borderWidth: 1.5,
-            color: {
-                border: "black",
-                background: "#eeeeee"
-            }
-        },
-        edgeSel: {
-            color: {
-                background: 'red',
-                border: "black"
-            },
-            borderWidth: 20
-        }
     },
     interaction: {
         multiselect: true,
@@ -343,3 +359,5 @@ const options = {
 };
 
 createGraph(dataSrc);
+
+
