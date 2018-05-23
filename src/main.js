@@ -205,7 +205,7 @@ function createGraph(id) {
     network = new vis.Network(container, graph, options);
 
     network.on('select', function (params) {
-        console.log(params);
+        //console.log(params);
         var selectedEdges = params.edges;
         var selectedNodes = params.nodes;
         // console.log(selectedEdges, "|", selectedNodes);
@@ -218,7 +218,6 @@ function createGraph(id) {
             }
         }
 
-        var newfocus = { x: 0, y: 0 };
         for (let i = 0; i < selectedEdges.length; i++) {
             let a = graph.edges.get(selectedEdges[i]);
             //console.log(a.id, "|", a.from, "|", a.to);
@@ -227,17 +226,24 @@ function createGraph(id) {
             if (pom == undefined) graph.nodes.update({ id: a.from, group: 'nodeSelectedGTo' });
         }
 
+        var newfocus = { x: 0, y: 0 };
         for (let i = 0; i < selectedNodes.length; i++) {
             newfocus.x += graph.nodes.get(selectedNodes[i]).origin.x;
             newfocus.y += graph.nodes.get(selectedNodes[i]).origin.y;
         }
 
-        if (newfocus.x !== 0 && newfocus.y !== 0) {
+        if (newfocus.x === 0 && newfocus.y === 0) {
+            focus.x = 0.5 * canvasWidth;
+            focus.y = 0.5 * canvasHeight;
+            document.getElementById("distortion").value = 0;
+        }
+        else {
             newfocus.x /= selectedNodes.length;
             newfocus.y /= selectedNodes.length;
             focus = newfocus;
-            fisheye()
         }
+
+        fisheye();
     });
 }
 
