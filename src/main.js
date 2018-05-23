@@ -94,7 +94,11 @@ function fisheye() {
                 var a = {
                     x: P.x - F.x,
                     y: P.y - F.y
-                }
+                };
+
+                if (a.x === 0 && a.y === 0)
+                    return P;
+
                 var r = Math.sqrt(a.x * a.x + a.y * a.y);
                 var phi = Math.atan2(a.y, a.x);
 
@@ -127,7 +131,7 @@ function fisheye() {
     });
 }
 
-function methodSwitch(id) {
+function switchMethod(id) {
     method = id;
     fisheye();
 }
