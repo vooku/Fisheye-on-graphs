@@ -19,3 +19,12 @@
     display: inline-block;
     margin-right: 2em;
 }
+
+#debug {
+    display: none;
+    visibility: hidden;
+}
+
+.help {
+    font-style: italic;
+}

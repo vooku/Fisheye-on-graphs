@@ -290,9 +290,9 @@ var changeChosenEdge =
         values.width = 1.5;
     }
 
-var dataSrc = "regular";
+var dataSrc = "airlines";
 document.getElementById(dataSrc).checked = true;
-var method = "cartesian"
+var method = "polar"
 document.getElementById(method).checked = true;
 document.getElementById("distortion").value = 0;
 var graph;
