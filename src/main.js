@@ -218,15 +218,21 @@ function createGraph(id) {
             }
         }
 
+        var newfocus = { x: 0, y: 0 };
         for (let i = 0; i < selectedEdges.length; i++) {
-            let a = graph.edges.get(selectedEdges[i]);
-            //console.log(a.id, "|", a.from, "|", a.to);
-            graph.nodes.update({ id: a.to, group: 'nodeSelectedGFrom' });
-            let pom = graph.nodes.get(a.from).group;
-            if (pom == undefined) graph.nodes.update({ id: a.from, group: 'nodeSelectedGTo' });
+            let edge = graph.edges.get(selectedEdges[i]);
+            graph.nodes.update({ id: edge.to, group: 'nodeSelectedGFrom' });
+            let pom = graph.nodes.get(edge.from).group;
+            if (pom == undefined)
+                graph.nodes.update({ id: edge.from, group: 'nodeSelectedGTo' });
+
+            var from = graph.nodes.get(edge.from);
+            var to = graph.nodes.get(edge.to);
+
+            newfocus.x += 0.5 * (from.origin.x + to.origin.x);
+            newfocus.y += 0.5 * (from.origin.y + to.origin.y);
         }
 
-        var newfocus = { x: 0, y: 0 };
         for (let i = 0; i < selectedNodes.length; i++) {
             newfocus.x += graph.nodes.get(selectedNodes[i]).origin.x;
             newfocus.y += graph.nodes.get(selectedNodes[i]).origin.y;
@@ -238,8 +244,8 @@ function createGraph(id) {
             document.getElementById("distortion").value = 0;
         }
         else {
-            newfocus.x /= selectedNodes.length;
-            newfocus.y /= selectedNodes.length;
+            newfocus.x /= selectedNodes.length + selectedEdges.length;
+            newfocus.y /= selectedNodes.length + selectedEdges.length;
             focus = newfocus;
         }
 
