@@ -8,7 +8,7 @@
 function rayRectIntersect(pos, dir, rect) {
     if (pos.x < rect.l || pos.x > rect.r || pos.y < rect.t || pos.y > rect.b) {
         console.log("Point outside rectangle; feature not implemented.");
-        return { x: 0, y: 0};
+        return { x: NaN, y: NaN};
     }
 
     if (dir.x == 0 && dir.y == 0) {
@@ -127,7 +127,12 @@ function fisheye() {
 
     graph.nodes.forEach(function(node) {
         var pos = distort(node.origin, focus);
-        graph.nodes.update({id: node.id, x: pos.x, y: pos.y});
+        var pos2 = distort(node.origin, focus2);
+        graph.nodes.update({
+            id: node.id,
+            x: 0.5 * (pos.x + pos2.x),
+            y: 0.5 * (pos.y + pos2.y)
+        });
     });
 }
 
@@ -142,7 +147,6 @@ function setFocus() {
         y: Number(document.getElementById("focusy").value)
     };
 
-    console.log(focus.x, " .. ", focus.y, "|")
     fisheye();
 }
 
@@ -195,7 +199,7 @@ function createGraph(id) {
             graph = createAirlines(canvasWidth, canvasHeight);
             break;
         case "regular":
-            graph = createRegular(canvasWidth, canvasHeight, 10);
+            graph = createRegular(canvasWidth, canvasHeight, 20);
             break;
         default:
             console.log("Invalid id \"" + id + "\", graph not created.");
@@ -303,8 +307,12 @@ var graphBounds = {
     l: 0, t: 0, r: 0, b: 0, w: 0, h: 0
 };
 var focus = {
-    x: 0.5 * canvasWidth,
-    y: 0.5 * canvasHeight
+    x: 0.2 * canvasWidth,
+    y: 0.2 * canvasHeight
+};
+var focus2 = {
+    x: 0.8 * canvasWidth,
+    y: 0.8 * canvasHeight
 };
 document.getElementById("focusx").value = focus.x;
 document.getElementById("focusy").value = focus.y;
